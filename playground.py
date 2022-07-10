@@ -38,23 +38,16 @@ time = [Dnum(s, 1) for s in time]
 time = [phi(s) for s in time]
 
 curve = [gamma(t) for t in time]
+
 X = []
 Y = []
-dX = []
-dY = []
+
 for point in curve:
     x, y = point
     x, dx = x.re, x.im
     y, dy = y.re, y.im
     X.append(x)
     Y.append(y)
-    dX.append(dx)
-    dY.append(dy)
-
-for point in curve:
-    x, y = point
-    x, dx = x.re, x.im
-    y, dy = y.re, y.im
     plt.gcf()
     plt.clf()
     plt.plot(X,Y, color="black")
