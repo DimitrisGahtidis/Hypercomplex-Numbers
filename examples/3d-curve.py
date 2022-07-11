@@ -57,6 +57,7 @@ def animate_function(i):
 
     ax.clear()
     ax.plot3D(X[:i+1], Y[:i+1], Z[:i+1], color="black")
+    ax.plot3D(X[i:], Y[i:], Z[i:], color="black", linestyle="--")
     ax.scatter(x, y, z, color="blue")
     ax.arrow3D(x , y, z, dx, dy, dz, mutation_scale=10, color="blue", arrowstyle="-|>")
     ax.set_xlim3d([-1, 1])
