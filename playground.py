@@ -1,60 +1,104 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath('.'))
+
 from modules.numbers import Dnum
 from modules.functions import *
+import modules.PYDrawing3D
 import matplotlib.pyplot as plt
-
-
-def sigma(u, v):
-    return (cos(u)*sin(v), cos(u)*cos(v), sin(u))
-
-u = Dnum(math.pi/4, 1)
-v = Dnum(math.pi/4, 1) 
-
-point = sigma(u,v) # point = sigma(u,v) + J_sigma @ V 
-x, y, z = point
-x, dx = x.re, x.im
-y, dy = y.re, y.im
-z, dz = z.re, z.im
-
-print(x, y, x)
-print(dx, dy, dz)
-
+from matplotlib import animation
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
 
 def gamma(t):
-    if t.re < 1:
-        return (Dnum(1),t)
-    elif 1 <= t.re:
-        s = t - 1
-        return (1 - s,Dnum(1))
+    return (sin(math.pi/5 * t),sin(math.pi/3 * t), 5*t/100)
 
-def phi(s):
-        return (s-1)**3 + 1
+def d_gamma(t):
+    return (math.pi/5 * cos(math.pi/5 * t),math.pi/3 * cos(math.pi/3 * t), Dnum(5)/100)
 
-steps = 200
+def norm(point):
+    x,y,z = point
+    return np.sqrt(x**2 + y**2 + z**2)
 
-time = [i for i in range(steps)]
-time = [s*2 / (steps-1) for s in time]
-time = [s for s in time]
-time = [Dnum(s, 1) for s in time]
-time = [phi(s) for s in time]
+steps = 100
+
+time = [i/(steps-1) for i in range(steps)]
+time = [20 * t for t in time]
+time = [Dnum(t, 1) for t in time]
 
 curve = [gamma(t) for t in time]
+tangent_space = [d_gamma(t) for t in time]
 
-X = []
-Y = []
 
-for point in curve:
-    x, y = point
-    x, dx = x.re, x.im
-    y, dy = y.re, y.im
-    X.append(x)
-    Y.append(y)
-    plt.gcf()
-    plt.clf()
-    plt.plot(X,Y, color="black")
-    plt.scatter(x, y, color="black")
-    plt.arrow(x , y, dx/2, dy/2, color="black", head_width=0.05)
-    plt.ylim(-2, 2)
-    plt.xlim(-2, 2)
-    plt.show(block=False)
-    plt.pause(1/60)
+position = np.array([(x.re, y.re, z.re) for x, y, z in curve])
+velocity = np.array([(x.im, y.im, z.im) for x, y, z in curve])
+acceleration = np.array([(dx.im, dy.im, dz.im) for dx, dy, dz in tangent_space])
+
+coordinates = ([point[0] for point in position], [point[1] for point in position], [point[2] for point in position])
+
+tangent = []
+binormal = []
+normal = []
+
+for v in velocity:
+    if norm(v) != 0:
+        tangent.append(np.array(v)/norm(v))
+    else:
+        tangent.append(np.array(v))
+
+for t, a in zip(tangent, acceleration):
+    b = np.cross(t,a)
+    if norm(b) != 0:
+        binormal.append(b/norm(b))
+    else:
+        binormal.append(b)
+
+for b, t in zip(binormal, tangent):
+    n = np.cross(b,t)
+    if norm(n) != 0:
+        normal.append(n/norm(n))
+    else:
+        normal.append(n)
+
+def animate_function(i):
+    X, Y, Z = coordinates
+    point = position[i]
+    tangent_vector = tangent[i]
+    normal_vector = normal[i]
+    binormal_vector = binormal[i]
+    t = time[i].re
+
+    ax.clear()
+    ax.plot3D(X[:i+1], Y[:i+1], Z[:i+1], color="black")
+    ax.plot3D(*coordinates, color="black", linestyle="--", label="Trajectory")
+    ax.scatter(*point, color="black", label = "Particle")
+    ax.arrow3D(*point, *tangent_vector, mutation_scale=10, color="blue", arrowstyle="-|>", label="Tangent vector")
+    ax.arrow3D(*point, *normal_vector, mutation_scale=10, color="red", arrowstyle="-|>", label="Normal vector")
+    ax.arrow3D(*point, *binormal_vector, mutation_scale=10, color="green", arrowstyle="-|>", label="Binormal vector")
+    ax.set_xlim3d([-1, 1])
+    ax.set_ylim3d([-1, 1])
+    ax.set_zlim3d([0, 2])
+    ax.set_title(f"Time = {np.round(t, decimals=2)} sec")
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_zlabel("Z")
+    ax.legend()
+
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+
+curve_ani = animation.FuncAnimation(fig, animate_function, interval=100, frames=steps)
+
 plt.show()
+
+# Saving the Animation
+folder_path = os.path.abspath(os.path.join('.','animations'))
+if not os.path.exists(folder_path):
+    os.makedirs(folder_path)
+
+file_path = os.path.join(folder_path, 'playground.gif')
+writergif = animation.PillowWriter(fps=steps/6)
+curve_ani.save(file_path, writer=writergif)
+
+
