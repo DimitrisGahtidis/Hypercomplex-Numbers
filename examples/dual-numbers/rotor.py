@@ -61,6 +61,6 @@ folder_path = os.path.abspath(os.path.join('.','animations'))
 if not os.path.exists(folder_path):
     os.makedirs(folder_path)
 
-file_path = os.path.join(folder_path, 'playground.gif')
+file_path = os.path.join(folder_path, 'rotor.gif')
 writergif = animation.PillowWriter(fps=steps/10)
 curve_ani.save(file_path, writer=writergif)
