@@ -18,7 +18,7 @@ n_side_points = 50
 lattice = []
 for x in range(n_side_points):
     for y in range(n_side_points):
-        lattice.append(Dnum(x/n_side_points*4-2,y/n_side_points*4-2))
+        lattice.append(Dnum(x/n_side_points*8-4,y/n_side_points*8-4))
 
 steps = 200
 d_theta = 1/steps
@@ -34,19 +34,28 @@ for lattice in transformation:
     X.append([point.re for point in lattice])
     Y.append([point.im for point in lattice])
 
+# norm_zero_X = [0 for i in range(100)]
+# norm_zero_Y = [i/100*4-2 for i in range(100)]
+
+# norm_one_X = [1 for value in norm_zero_X]
+# norm_one_X += [-1 for value in norm_one_X]
+# norm_one_Y = norm_zero_Y + norm_zero_Y
+
 
 def animate_function(i):
     x = X[i]
     y = Y[i]
 
     ax.clear()
-    ax.scatter(x, y, color="black")
-    ax.set_xlim([-1, 1])
-    ax.set_ylim([-1, 1])
+    ax.vlines(0, -2, 2, color="blue", label=f'$|x + y \\varepsilon| = 0$', zorder=-1)
+    ax.vlines([-1,1], -2, 2, color="red", label=f'$|x + y \\varepsilon| = 1$', zorder=-1)
+    ax.scatter(x, y, color="black", zorder=1)
+    ax.set_xlim([-2, 2])
+    ax.set_ylim([-2, 2])
     ax.set_title(f'$e^{{{round(d_theta*i,2)}\\varepsilon}} (x + y \\varepsilon)$')
     ax.set_xlabel("X")
     ax.set_ylabel("Y")
-    #ax.legend(loc="upper left", bbox_to_anchor=(1.05,1))
+    ax.legend(loc="upper left", bbox_to_anchor=(1.05,1))
     plt.tight_layout()
 
 fig = plt.figure()
