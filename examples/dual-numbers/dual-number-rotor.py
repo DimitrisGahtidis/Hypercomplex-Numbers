@@ -34,13 +34,6 @@ for lattice in transformation:
     X.append([point.re for point in lattice])
     Y.append([point.im for point in lattice])
 
-# norm_zero_X = [0 for i in range(100)]
-# norm_zero_Y = [i/100*4-2 for i in range(100)]
-
-# norm_one_X = [1 for value in norm_zero_X]
-# norm_one_X += [-1 for value in norm_one_X]
-# norm_one_Y = norm_zero_Y + norm_zero_Y
-
 
 def animate_function(i):
     x = X[i]
@@ -70,6 +63,6 @@ folder_path = os.path.abspath(os.path.join('.','animations'))
 if not os.path.exists(folder_path):
     os.makedirs(folder_path)
 
-file_path = os.path.join(folder_path, 'rotor.gif')
+file_path = os.path.join(folder_path, 'dual-number-rotor.gif')
 writergif = animation.PillowWriter(fps=steps/10)
 curve_ani.save(file_path, writer=writergif)

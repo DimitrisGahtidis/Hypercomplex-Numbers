@@ -1,3 +1,4 @@
+import numpy as np
 
 class Dnum:
     def __init__(self, re, im = 0):
@@ -19,6 +20,9 @@ class Dnum:
     @scalar_check
     def __mul__(self, w):
         return Dnum(self.re * w.re, self.re * w.im + self.im * w.re)
+    @scalar_check
+    def __matmul__(self, w):
+        return Dnum(self.re @ w.re, self.re @ w.im + self.im @ w.re)
     @scalar_check
     def __truediv__(self, w):
         return Dnum(self.re / w.re, (self.im * w.re - self.re * w.im) / (w.re * w.re))
@@ -43,6 +47,17 @@ class Dnum:
     def __abs__(self):
         return abs(self.re)
     def __repr__(self):
-        return f"({self.re} + {self.im} i_0)"
+        return f"{self.re} + {self.im} i_0"
     def __str__(self):
-        return f"({self.re} + {self.im} i_0)"
+        return f"{self.re} + {self.im} i_0"
+    def __getitem__(self, key):
+        return Dnum(self.re[key], self.im[key])
+
+    def split(self):
+        if hasattr(self, '__iter__'):
+            im = np.array([x.im for x in self])
+            re = np.array([x.re for x in self])
+            return Dnum(re, im)
+        else:
+            self.im = self.im
+            self.re = self.re
