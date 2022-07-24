@@ -1,16 +1,13 @@
-#%%
 import sys
 import os
 
 sys.path.append(os.path.abspath('.'))
 
-from modules.numbers import Dnum
-from modules.functions import *
+from modules.numbers import dnum as dn
 import modules.PYDrawing3D
 import matplotlib.pyplot as plt
 from matplotlib import animation
 from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
 
 
 n_side_points = 50
@@ -18,7 +15,7 @@ n_side_points = 50
 lattice = []
 for x in range(n_side_points):
     for y in range(n_side_points):
-        lattice.append(Dnum(x/n_side_points*8-4,y/n_side_points*8-4))
+        lattice.append(dn(x/n_side_points*8-4,y/n_side_points*8-4))
 
 steps = 200
 d_theta = 1/steps
@@ -28,7 +25,7 @@ X = []
 Y = []
 
 for i in range(steps):
-    transformation.append([point * exp(Dnum(0,d_theta*i)) for point in lattice])
+    transformation.append([point * dn.exp(dn(0,d_theta*i)) for point in lattice])
 
 for lattice in transformation:
     X.append([point.re for point in lattice])

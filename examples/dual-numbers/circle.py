@@ -3,20 +3,19 @@ import os
 
 sys.path.append(os.path.abspath('.'))
 
-from modules.numbers import Dnum
-from modules.functions import *
+from modules.numbers import dnum as dn
 import matplotlib.pyplot as plt
 from matplotlib import animation
 import numpy as np
 
 def gamma(t):
-    return (cos(t),sin(t))
+    return (dn.cos(t),dn.sin(t))
 
 steps = 100
 
 time = [i/(steps-1) for i in range(steps)]
-time = [2 * math.pi * t for t in time]
-time = [Dnum(t, 1) for t in time]
+time = [2 * np.pi * t for t in time]
+time = [dn(t, 1) for t in time]
 
 curve = [gamma(t) for t in time]
 
