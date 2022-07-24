@@ -3,8 +3,7 @@ import os
 
 sys.path.append(os.path.abspath('.'))
 
-from modules.numbers import Dnum
-from modules.functions import *
+from modules.numbers import dnum as dn
 import modules.PYDrawing3D
 import matplotlib.pyplot as plt
 from matplotlib import animation
@@ -12,13 +11,13 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
 def gamma(t):
-    return (sin(math.pi/5 * t),sin(math.pi/3 * t), 5*t)
+    return (dn.sin(np.pi/5 * t),dn.sin(np.pi/3 * t), 5*t)
 
 steps = 100
 
 time = [i/(steps-1) for i in range(steps)]
 time = [20 * t for t in time]
-time = [Dnum(t, 1) for t in time]
+time = [dn(t, 1) for t in time]
 
 curve = [gamma(t) for t in time]
 

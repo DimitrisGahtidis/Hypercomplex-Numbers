@@ -3,8 +3,7 @@ import os
 
 sys.path.append(os.path.abspath('.'))
 
-from modules.numbers import Dnum
-from modules.functions import *
+from modules.numbers import dnum as dn
 import modules.PYDrawing3D
 import matplotlib.pyplot as plt
 from matplotlib import animation
@@ -12,10 +11,10 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
 def gamma(t):
-    return (sin(math.pi/5 * t),sin(math.pi/3 * t), 5*t/100)
+    return (dn.sin(np.pi/5 * t),dn.sin(np.pi/3 * t), 5*t/100)
 
 def d_gamma(t):
-    return (math.pi/5 * cos(math.pi/5 * t),math.pi/3 * cos(math.pi/3 * t), Dnum(5)/100)
+    return (np.pi/5 * dn.cos(np.pi/5 * t),np.pi/3 * dn.cos(np.pi/3 * t), dn(5)/100)
 
 def norm(point):
     x,y,z = point
@@ -25,7 +24,7 @@ steps = 100
 
 time = [i/(steps-1) for i in range(steps)]
 time = [20 * t for t in time]
-time = [Dnum(t, 1) for t in time]
+time = [dn(t, 1) for t in time]
 
 curve = [gamma(t) for t in time]
 tangent_space = [d_gamma(t) for t in time]
