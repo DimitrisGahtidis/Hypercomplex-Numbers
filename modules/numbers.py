@@ -248,7 +248,7 @@ class dnum:
             return dnum(np.tanh(z.re), (1 - np.tanh(z.re)**2) * z.im)
     def asinh(z):
         if dnum.backward_mode is True:
-            return dnum(np.asinh(z.re), z.d(v/(1-z.re**2)))
+            return dnum(np.asinh(z.re), lambda v: z.d(v/(1-z.re**2)))
         else:
             return dnum(np.asinh(z.re), 1/(1-z.re**2) * z.im)
     def acosh(z):
