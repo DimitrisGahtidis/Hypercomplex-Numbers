@@ -1,2 +1,1 @@
-.hypercomplex/ # the virtual environment
-.vscode/
+.hypercomplex/* # the virtual environment
